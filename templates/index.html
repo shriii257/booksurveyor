@@ -5,627 +5,783 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SurveyorLink — Marketplace</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
+  /* ===== DESIGN TOKENS ===== */
   :root {
-    --ink: #1a1a2e;
-    --ink-light: #4a4a6a;
-    --cream: #faf8f4;
-    --gold: #c9a84c;
-    --gold-light: #f0dfa0;
-    --orange: #e07b39;
-    --orange-light: #fdf0e8;
-    --green: #2d7d46;
-    --green-light: #e8f5ec;
-    --red: #c0392b;
-    --red-light: #fdecea;
-    --blue: #2563eb;
-    --card: #ffffff;
-    --border: #e8e4dc;
-    --shadow: 0 2px 16px rgba(26,26,46,0.08);
-    --shadow-hover: 0 8px 32px rgba(26,26,46,0.16);
-    --radius: 12px;
+    --bg: #0f0f13;
+    --bg-card: #1a1a24;
+    --bg-elevated: #22222f;
+    --bg-input: #14141c;
+    --border: rgba(255,255,255,0.08);
+    --border-focus: rgba(255,184,0,0.5);
+
+    --gold: #ffb800;
+    --gold-dim: rgba(255,184,0,0.15);
+    --gold-glow: rgba(255,184,0,0.3);
+    --amber: #ff8c00;
+    --teal: #00d4aa;
+    --teal-dim: rgba(0,212,170,0.12);
+    --rose: #ff4d6d;
+    --rose-dim: rgba(255,77,109,0.12);
+
+    --text: #f0efe8;
+    --text-muted: #8a8a9a;
+    --text-dim: #555568;
+
+    --radius-sm: 8px;
+    --radius: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    --shadow-glow: 0 0 40px rgba(255,184,0,0.12);
+
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Outfit', system-ui, sans-serif;
   }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
   body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--cream);
-    color: var(--ink);
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text);
     min-height: 100vh;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
   }
 
-  /* ===== TYPOGRAPHY ===== */
-  h1, h2, h3 { font-family: 'DM Serif Display', serif; }
-  
-  /* ===== PAGES ===== */
   .page { display: none; }
   .page.active { display: block; }
 
-  /* ===== AUTH PAGE ===== */
-  .auth-page {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, var(--ink) 0%, #2d2d5e 100%);
-    padding: 24px;
-  }
-
-  .auth-container {
-    background: var(--card);
-    border-radius: 20px;
-    width: 100%;
-    max-width: 440px;
-    overflow: hidden;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.3);
-  }
-
-  .auth-header {
-    background: linear-gradient(135deg, var(--gold) 0%, var(--orange) 100%);
-    padding: 32px;
-    text-align: center;
-    color: var(--ink);
-  }
-
-  .auth-logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 28px;
-    color: var(--ink);
-    margin-bottom: 4px;
-  }
-
-  .auth-tagline {
-    font-size: 13px;
-    opacity: 0.75;
-    font-style: italic;
-  }
-
-  .auth-tabs {
-    display: flex;
-    border-bottom: 2px solid var(--border);
-  }
-
-  .auth-tab {
-    flex: 1;
-    padding: 14px;
-    text-align: center;
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 14px;
-    color: var(--ink-light);
-    border: none;
-    background: none;
-    transition: all 0.2s;
-  }
-
-  .auth-tab.active {
-    color: var(--orange);
-    border-bottom: 2px solid var(--orange);
-    margin-bottom: -2px;
-  }
-
-  .auth-body { padding: 28px; }
-
-  .form-group { margin-bottom: 16px; }
-
   label {
     display: block;
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--ink-light);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
     margin-bottom: 6px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   input, select, textarea {
     width: 100%;
-    padding: 12px 14px;
+    padding: 13px 16px;
+    background: var(--bg-input);
     border: 1.5px solid var(--border);
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
     font-size: 14px;
-    color: var(--ink);
-    background: var(--cream);
-    transition: border-color 0.2s;
+    color: var(--text);
     outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
   }
 
   input:focus, select:focus, textarea:focus {
-    border-color: var(--orange);
-    background: #fff;
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px var(--gold-glow);
+    background: rgba(255,184,0,0.03);
   }
 
-  textarea { resize: vertical; min-height: 80px; }
+  input::placeholder, textarea::placeholder { color: var(--text-dim); }
+  textarea { resize: vertical; min-height: 88px; }
 
-  select { cursor: pointer; }
-
-  .role-selector {
-    display: flex;
-    gap: 10px;
-    margin-top: 4px;
-  }
-
-  .role-btn {
-    flex: 1;
-    padding: 12px;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
+  select {
     cursor: pointer;
-    text-align: center;
-    font-size: 14px;
-    font-weight: 500;
-    background: var(--cream);
-    color: var(--ink-light);
-    transition: all 0.2s;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a8a9a' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
   }
 
-  .role-btn.selected {
-    border-color: var(--orange);
-    background: var(--orange-light);
-    color: var(--orange);
+  select option { background: var(--bg-card); }
+  .form-group { margin-bottom: 18px; }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
   }
 
+  .form-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+  }
+
+  @media (max-width: 640px) {
+    .form-row, .form-row-3 { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+  /* ===== BUTTONS ===== */
   .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
+    padding: 13px 22px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
     font-weight: 600;
     font-size: 14px;
     cursor: pointer;
     border: none;
     transition: all 0.2s;
+    letter-spacing: 0.02em;
     text-decoration: none;
+    white-space: nowrap;
   }
 
   .btn-primary {
-    background: linear-gradient(135deg, var(--orange), var(--gold));
-    color: white;
+    background: linear-gradient(135deg, var(--gold), var(--amber));
+    color: #0f0f13;
     width: 100%;
-    padding: 14px;
+    padding: 15px;
     font-size: 15px;
+    font-weight: 700;
+    box-shadow: 0 4px 20px rgba(255,184,0,0.25);
   }
 
-  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(224,123,57,0.4); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,184,0,0.4); }
 
   .btn-outline {
     background: transparent;
     border: 1.5px solid var(--border);
-    color: var(--ink);
+    color: var(--text-muted);
   }
 
-  .btn-outline:hover { border-color: var(--orange); color: var(--orange); }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
 
-  .btn-green { background: var(--green); color: white; }
-  .btn-green:hover { background: #236038; }
+  .btn-teal {
+    background: linear-gradient(135deg, var(--teal), #00b894);
+    color: #0f0f13;
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(0,212,170,0.2);
+  }
 
-  .btn-red { background: var(--red); color: white; }
-  .btn-red:hover { background: #a93226; }
+  .btn-teal:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,212,170,0.35); }
 
-  .btn-gold { background: var(--gold); color: white; }
-  .btn-gold:hover { background: #b8943e; }
+  .btn-rose {
+    background: linear-gradient(135deg, var(--rose), #e83e60);
+    color: white;
+    font-weight: 700;
+  }
 
-  .btn-sm { padding: 8px 14px; font-size: 12px; }
+  .btn-rose:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,77,109,0.3); }
 
-  .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+  .btn-ghost {
+    background: var(--bg-elevated);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
 
-  /* ===== MAIN LAYOUT ===== */
-  .app-layout {
+  .btn-ghost:hover { color: var(--gold); border-color: var(--gold-dim); }
+  .btn-sm { padding: 8px 14px; font-size: 12px; border-radius: 6px; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+
+  /* ===== SPINNER ===== */
+  .spinner {
+    display: inline-block;
+    width: 15px; height: 15px;
+    border: 2px solid rgba(0,0,0,0.2);
+    border-top-color: #0f0f13;
+    border-radius: 50%;
+    animation: spin 0.65s linear infinite;
+    flex-shrink: 0;
+  }
+
+  .spinner-light { border-color: rgba(255,255,255,0.2); border-top-color: white; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===== AUTH PAGE ===== */
+  .auth-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: stretch;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .auth-bg {
+    position: fixed; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 20% 50%, rgba(255,184,0,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 80% at 80% 20%, rgba(0,212,170,0.06) 0%, transparent 60%),
+                var(--bg);
+    z-index: 0;
+  }
+
+  .auth-bg-grid {
+    position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 0;
+  }
+
+  .auth-left {
+    flex: 1;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    justify-content: center;
+    padding: 60px;
+    position: relative;
+    z-index: 1;
   }
 
+  .auth-left-content { max-width: 480px; }
+
+  .auth-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 56px; }
+
+  .auth-brand-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--gold), var(--amber));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 4px 16px var(--gold-glow);
+  }
+
+  .auth-brand-name { font-family: var(--font-display); font-size: 22px; color: var(--gold); letter-spacing: -0.5px; }
+
+  .auth-headline { font-family: var(--font-display); font-size: clamp(36px, 4vw, 52px); line-height: 1.15; color: var(--text); margin-bottom: 20px; }
+  .auth-headline em { font-style: italic; color: var(--gold); }
+
+  .auth-subhead { font-size: 16px; color: var(--text-muted); line-height: 1.7; margin-bottom: 48px; max-width: 380px; }
+
+  .auth-pills { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .auth-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 40px;
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .auth-pill span { font-size: 15px; }
+
+  .auth-right {
+    width: 420px; flex-shrink: 0;
+    background: var(--bg-card);
+    border-left: 1px solid var(--border);
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 48px 40px;
+    position: relative; z-index: 1;
+    overflow-y: auto;
+  }
+
+  .auth-right-title { font-family: var(--font-display); font-size: 28px; color: var(--text); margin-bottom: 6px; }
+  .auth-right-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 32px; }
+
+  .auth-seg {
+    display: flex;
+    background: var(--bg-input);
+    border-radius: var(--radius-sm);
+    padding: 4px;
+    margin-bottom: 28px;
+    border: 1px solid var(--border);
+  }
+
+  .auth-seg-btn {
+    flex: 1; padding: 9px; text-align: center; cursor: pointer;
+    font-size: 13px; font-weight: 600; color: var(--text-dim);
+    border-radius: 6px; border: none; background: none;
+    font-family: var(--font-body); transition: all 0.2s;
+  }
+
+  .auth-seg-btn.active { background: var(--bg-elevated); color: var(--gold); box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+
+  .role-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; }
+
+  .role-card {
+    padding: 14px; border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    cursor: pointer; text-align: center; background: var(--bg-input); transition: all 0.2s;
+  }
+
+  .role-card .role-icon { font-size: 24px; margin-bottom: 6px; }
+  .role-card .role-label { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+  .role-card.selected { border-color: var(--gold); background: var(--gold-dim); }
+  .role-card.selected .role-label { color: var(--gold); }
+
+  @media (max-width: 768px) {
+    .auth-left { display: none; }
+    .auth-right { width: 100%; border-left: none; padding: 32px 24px; min-height: 100vh; }
+    .auth-mobile-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 32px; }
+    .auth-mobile-brand-icon {
+      width: 38px; height: 38px;
+      background: linear-gradient(135deg, var(--gold), var(--amber));
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; box-shadow: 0 4px 12px var(--gold-glow);
+    }
+    .auth-mobile-brand-name { font-family: var(--font-display); font-size: 20px; color: var(--gold); }
+  }
+
+  @media (min-width: 769px) { .auth-mobile-brand { display: none; } }
+
+  /* ===== ALERT ===== */
+  .alert {
+    padding: 12px 16px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 16px;
+    display: flex; align-items: flex-start; gap: 8px; line-height: 1.5;
+  }
+
+  .alert-error { background: var(--rose-dim); color: #ff8fa5; border: 1px solid rgba(255,77,109,0.25); }
+  .alert-success { background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(0,212,170,0.25); }
+  .alert-info { background: rgba(99,102,241,0.1); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.25); }
+
+  /* ===== MAIN NAVBAR ===== */
   .navbar {
-    background: var(--ink);
-    color: white;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
     padding: 0 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 60px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px; position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
   }
 
-  .nav-logo {
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px;
-    color: var(--gold);
-    letter-spacing: -0.5px;
+  .nav-logo { display: flex; align-items: center; gap: 10px; }
+
+  .nav-logo-icon {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, var(--gold), var(--amber));
+    border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px;
   }
 
-  .nav-user {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    font-size: 14px;
+  .nav-logo-text { font-family: var(--font-display); font-size: 18px; color: var(--gold); letter-spacing: -0.3px; }
+
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .nav-user-info { display: flex; align-items: center; gap: 10px; }
+
+  .nav-avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: var(--gold);
+    flex-shrink: 0; overflow: hidden;
+    background: linear-gradient(135deg, var(--gold-dim), var(--bg-elevated));
+    border: 1.5px solid var(--gold-dim);
   }
 
-  .nav-badge {
-    background: var(--orange);
-    color: white;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+  .nav-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  .nav-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  @media (max-width: 480px) { .nav-name { display: none; } }
+
+  .nav-role-badge {
+    padding: 4px 10px; border-radius: 20px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
   }
+
+  .badge-customer { background: rgba(99,102,241,0.2); color: #a5b4fc; }
+  .badge-surveyor { background: var(--gold-dim); color: var(--gold); }
+  @media (max-width: 360px) { .nav-role-badge { display: none; } }
 
   .btn-logout {
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.2);
-    color: white;
-    padding: 6px 14px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    font-family: 'DM Sans', sans-serif;
-    transition: all 0.2s;
+    background: var(--bg-elevated); border: 1px solid var(--border); color: var(--text-muted);
+    padding: 7px 14px; border-radius: 6px; cursor: pointer;
+    font-size: 12px; font-family: var(--font-body); font-weight: 600; transition: all 0.2s;
   }
 
-  .btn-logout:hover { background: rgba(255,255,255,0.2); }
+  .btn-logout:hover { border-color: var(--rose); color: var(--rose); }
 
-  /* ===== TABS NAV ===== */
+  /* ===== TAB NAV ===== */
   .tab-nav {
-    background: white;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    overflow-x: auto;
-    padding: 0 24px;
+    background: var(--bg-card); border-bottom: 1px solid var(--border);
+    display: flex; overflow-x: auto; padding: 0 20px;
+    scrollbar-width: none; gap: 4px;
   }
+
+  .tab-nav::-webkit-scrollbar { display: none; }
 
   .tab-nav-item {
-    padding: 16px 20px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--ink-light);
-    border-bottom: 2px solid transparent;
-    white-space: nowrap;
-    transition: all 0.2s;
+    padding: 0 16px; height: 48px;
+    display: flex; align-items: center; gap: 6px;
+    cursor: pointer; font-size: 13px; font-weight: 600;
+    color: var(--text-dim); border-bottom: 2px solid transparent;
+    white-space: nowrap; transition: all 0.2s; letter-spacing: 0.01em; flex-shrink: 0;
   }
 
-  .tab-nav-item.active {
-    color: var(--orange);
-    border-bottom-color: var(--orange);
-  }
+  .tab-nav-item:hover { color: var(--text-muted); }
+  .tab-nav-item.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab-nav-item .tab-icon { font-size: 15px; }
 
-  /* ===== CONTENT AREA ===== */
-  .content { padding: 24px; max-width: 1100px; margin: 0 auto; width: 100%; }
+  /* ===== CONTENT ===== */
+  .content { padding: 28px 24px; max-width: 1080px; margin: 0 auto; width: 100%; }
+  @media (max-width: 640px) { .content { padding: 20px 16px; } }
 
-  /* ===== TAB PANES ===== */
   .tab-pane { display: none; }
-  .tab-pane.active { display: block; }
-
-  /* ===== CARDS ===== */
-  .card {
-    background: var(--card);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    box-shadow: var(--shadow);
-    padding: 24px;
-    margin-bottom: 16px;
-    transition: box-shadow 0.2s;
-  }
-
-  .card:hover { box-shadow: var(--shadow-hover); }
-
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 16px;
-    gap: 12px;
-  }
-
-  .card-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 18px;
-    color: var(--ink);
-  }
-
-  .tag {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  .tag-survey { background: #e8f0fe; color: #2563eb; }
-  .tag-pending { background: #fef9e7; color: #b8860b; }
-  .tag-contacted { background: var(--green-light); color: var(--green); }
-  .tag-not-contacted { background: var(--red-light); color: var(--red); }
-  .tag-unlocked { background: var(--green-light); color: var(--green); }
-
-  .card-meta {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 12px;
-    margin-bottom: 16px;
-  }
-
-  .meta-item label {
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    color: var(--ink-light);
-    margin-bottom: 3px;
-  }
-
-  .meta-item span {
-    font-size: 14px;
-    color: var(--ink);
-    font-weight: 500;
-  }
-
-  .phone-blur {
-    filter: blur(5px);
-    user-select: none;
-    color: var(--ink-light);
-    font-style: italic;
-  }
-
-  .contact-box {
-    background: var(--green-light);
-    border: 1px solid var(--green);
-    border-radius: 8px;
-    padding: 12px 16px;
-    margin-top: 12px;
-  }
-
-  .contact-box .contact-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    color: var(--green);
-    letter-spacing: 0.5px;
-    margin-bottom: 4px;
-  }
-
-  .contact-box .contact-phone {
-    font-size: 18px;
-    font-weight: 700;
-    color: var(--ink);
-  }
-
-  /* ===== STATS ROW ===== */
-  .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 16px;
-    margin-bottom: 28px;
-  }
-
-  .stat-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-    text-align: center;
-    box-shadow: var(--shadow);
-  }
-
-  .stat-number {
-    font-family: 'DM Serif Display', serif;
-    font-size: 36px;
-    color: var(--orange);
-  }
-
-  .stat-label {
-    font-size: 12px;
-    color: var(--ink-light);
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-top: 4px;
-  }
+  .tab-pane.active { display: block; animation: fadeIn 0.25s ease; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
   /* ===== SECTION HEADER ===== */
   .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 24px; gap: 12px; flex-wrap: wrap;
   }
 
-  .section-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px;
-    color: var(--ink);
+  .section-title { font-family: var(--font-display); font-size: 26px; color: var(--text); line-height: 1.2; }
+
+  /* ===== STAT CARDS ===== */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 14px; margin-bottom: 30px; }
+
+  .stat-card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; text-align: center; position: relative; overflow: hidden; transition: border-color 0.2s;
   }
 
-  /* ===== SURVEYORS TABLE ===== */
-  .unlock-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 12px;
+  .stat-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--amber));
   }
+
+  .stat-card:hover { border-color: var(--gold-dim); }
+
+  .stat-number {
+    font-family: var(--font-display); font-size: 38px; line-height: 1;
+    background: linear-gradient(135deg, var(--gold), var(--amber));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 6px;
+  }
+
+  .stat-label { font-size: 11px; font-weight: 600; color: var(--text-dim); letter-spacing: 0.07em; text-transform: uppercase; }
+
+  /* ===== CARDS ===== */
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 22px; margin-bottom: 14px; transition: border-color 0.2s, box-shadow 0.2s;
+    position: relative; overflow: hidden;
+  }
+
+  .card:hover { border-color: rgba(255,184,0,0.2); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+
+  .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; gap: 12px; }
+  .card-title { font-family: var(--font-display); font-size: 19px; color: var(--text); line-height: 1.3; margin-bottom: 4px; }
+  .card-sub { font-size: 13px; color: var(--text-muted); }
+  .card-badges { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; flex-shrink: 0; }
+
+  /* ===== TAGS / BADGES ===== */
+  .tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 20px;
+    font-size: 10px; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; white-space: nowrap;
+  }
+
+  .tag-survey { background: rgba(99,102,241,0.15); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.25); }
+  .tag-pending { background: rgba(255,184,0,0.12); color: var(--gold); border: 1px solid rgba(255,184,0,0.2); }
+  .tag-contacted { background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(0,212,170,0.2); }
+  .tag-not_contacted { background: var(--rose-dim); color: var(--rose); border: 1px solid rgba(255,77,109,0.2); }
+  .tag-not-contacted { background: var(--rose-dim); color: var(--rose); border: 1px solid rgba(255,77,109,0.2); }
+  .tag-unlocked { background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(0,212,170,0.2); }
+  .tag-verified { background: rgba(255,184,0,0.15); color: var(--gold); border: 1px solid rgba(255,184,0,0.25); }
+
+  /* ===== META GRID ===== */
+  .card-meta {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 14px;
+    padding: 16px; background: var(--bg-elevated); border-radius: 10px; margin-bottom: 16px;
+    border: 1px solid var(--border);
+  }
+
+  .meta-item label { font-size: 10px; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; }
+  .meta-item span { font-size: 14px; color: var(--text); font-weight: 500; }
+
+  /* ===== PHONE BLUR ===== */
+  .phone-blur { filter: blur(6px); user-select: none; color: var(--text-dim); font-style: italic; pointer-events: none; }
+
+  /* ===== CONTACT BOX ===== */
+  .contact-box {
+    background: linear-gradient(135deg, rgba(0,212,170,0.08), rgba(0,212,170,0.04));
+    border: 1px solid rgba(0,212,170,0.25); border-radius: 10px; padding: 16px; margin-top: 14px;
+  }
+
+  .contact-box .contact-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--teal); margin-bottom: 8px; }
+  .contact-box .contact-phone { font-size: 22px; font-weight: 700; color: var(--text); letter-spacing: 0.03em; font-family: var(--font-display); }
+  .contact-box .contact-name { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+  .contact-status { font-size: 12px; color: var(--teal); margin-top: 4px; }
+
+  /* ===== UNLOCK ITEM ===== */
+  .unlock-list { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
 
   .unlock-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    background: var(--cream);
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    flex-wrap: wrap;
-    gap: 8px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 16px; background: var(--bg-elevated); border-radius: 10px;
+    border: 1px solid var(--border); flex-wrap: wrap; gap: 10px; transition: border-color 0.2s;
   }
 
-  .unlock-surveyor {
-    font-weight: 600;
-    font-size: 14px;
-    color: var(--ink);
+  .unlock-item:hover { border-color: rgba(255,184,0,0.2); }
+  .unlock-item-left { display: flex; flex-direction: column; gap: 4px; }
+  .unlock-surveyor { font-weight: 600; font-size: 14px; color: var(--text); }
+  .unlock-count { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+  .btn-group { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  /* ===== DIVIDER ===== */
+  .divider-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--text-dim); margin: 18px 0 10px;
+    display: flex; align-items: center; gap: 10px;
   }
 
-  .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+  .divider-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ===== DESCRIPTION TEXT ===== */
+  .card-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; margin-bottom: 14px; }
+
+  /* ===== SEARCH BAR ===== */
+  .search-wrap { position: relative; margin-bottom: 22px; }
+
+  .search-wrap input {
+    padding-left: 44px; background: var(--bg-card); border-color: var(--border);
+    height: 48px; font-size: 14px;
+  }
+
+  .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--text-dim); font-size: 16px; pointer-events: none; }
 
   /* ===== STARS ===== */
-  .star-rating {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 12px;
+  .star-rating { display: flex; gap: 4px; margin-bottom: 12px; }
+  .star { font-size: 32px; cursor: pointer; color: var(--bg-elevated); transition: all 0.1s; line-height: 1; }
+  .star.active { color: var(--gold); text-shadow: 0 0 12px var(--gold-glow); }
+  .star:hover { transform: scale(1.15); }
+
+  /* ===== REVIEW CARD ===== */
+  .review-card {
+    background: var(--bg-elevated); border-radius: 12px; padding: 18px; margin-bottom: 12px;
+    border: 1px solid var(--border); transition: border-color 0.2s;
   }
 
-  .star {
-    font-size: 28px;
-    cursor: pointer;
-    color: #d1d5db;
-    transition: color 0.15s;
-  }
-
-  .star.active { color: var(--gold); }
-  .star:hover ~ .star { color: #d1d5db; }
+  .review-card:hover { border-color: rgba(255,184,0,0.15); }
+  .review-stars { color: var(--gold); font-size: 16px; margin-bottom: 8px; letter-spacing: 2px; }
+  .review-text { font-size: 14px; color: var(--text); line-height: 1.65; }
+  .review-meta { font-size: 12px; color: var(--text-dim); margin-top: 10px; display: flex; align-items: center; gap: 6px; }
+  .review-meta-dot { width: 3px; height: 3px; background: var(--text-dim); border-radius: 50%; }
 
   /* ===== MODAL ===== */
   .modal-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(26,26,46,0.6);
-    z-index: 200;
-    align-items: center;
-    justify-content: center;
-    padding: 24px;
-    backdrop-filter: blur(4px);
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 200;
+    align-items: center; justify-content: center; padding: 20px;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   }
 
   .modal-overlay.open { display: flex; }
 
   .modal {
-    background: white;
-    border-radius: 16px;
-    padding: 28px;
-    width: 100%;
-    max-width: 480px;
-    box-shadow: 0 24px 64px rgba(0,0,0,0.3);
-    animation: slideUp 0.25s ease;
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    padding: 28px; width: 100%; max-width: 520px;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 40px rgba(255,184,0,0.05);
+    animation: modalUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    max-height: 90vh; overflow-y: auto;
   }
 
-  @keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
+  @keyframes modalUp { from { transform: translateY(24px) scale(0.97); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
 
-  .modal-title {
-    font-family: 'DM Serif Display', serif;
-    font-size: 22px;
-    margin-bottom: 20px;
-    color: var(--ink);
-  }
+  .modal-title { font-family: var(--font-display); font-size: 22px; margin-bottom: 6px; color: var(--text); }
+  .modal-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; line-height: 1.6; }
 
-  /* ===== ALERT ===== */
-  .alert {
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    margin-bottom: 16px;
-  }
-
-  .alert-error { background: var(--red-light); color: var(--red); border: 1px solid #f5c6cb; }
-  .alert-success { background: var(--green-light); color: var(--green); border: 1px solid #c3e6cb; }
-  .alert-info { background: #e8f0fe; color: var(--blue); border: 1px solid #b8d4f8; }
+  .modal-preview { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 10px; padding: 16px; margin-bottom: 22px; }
+  .modal-preview-title { font-weight: 600; color: var(--text); font-size: 15px; margin-bottom: 4px; }
+  .modal-preview-sub { font-size: 13px; color: var(--text-muted); }
 
   /* ===== EMPTY STATE ===== */
-  .empty-state {
-    text-align: center;
-    padding: 60px 24px;
-    color: var(--ink-light);
+  .empty-state { text-align: center; padding: 70px 24px; color: var(--text-dim); }
+  .empty-icon { font-size: 56px; margin-bottom: 16px; display: block; opacity: 0.6; }
+  .empty-state h3 { font-family: var(--font-display); font-size: 22px; margin-bottom: 8px; color: var(--text-muted); }
+  .empty-state p { font-size: 14px; color: var(--text-dim); max-width: 280px; margin: 0 auto; }
+
+  /* ===== FORM CARD ===== */
+  .form-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; max-width: 640px; }
+
+  /* ===== PROFILE ===== */
+  .profile-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 28px; max-width: 720px; margin-bottom: 14px; }
+
+  .profile-header {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 24px;
+    padding-bottom: 24px; border-bottom: 1px solid var(--border);
   }
 
-  .empty-state-icon { font-size: 56px; margin-bottom: 16px; }
-  .empty-state h3 { font-size: 20px; margin-bottom: 8px; color: var(--ink); }
-  .empty-state p { font-size: 14px; }
-
-  /* ===== LOADING ===== */
-  .spinner {
-    display: inline-block;
-    width: 16px; height: 16px;
-    border: 2px solid rgba(255,255,255,0.4);
-    border-top-color: white;
-    border-radius: 50%;
-    animation: spin 0.6s linear infinite;
+  /* ===== PROFILE PHOTO ===== */
+  .profile-photo-wrap {
+    position: relative; flex-shrink: 0;
   }
 
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  /* ===== SEARCH ===== */
-  .search-bar {
-    position: relative;
-    margin-bottom: 20px;
+  .profile-photo-circle {
+    width: 90px; height: 90px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-dim), var(--bg-elevated));
+    border: 2px solid rgba(255,184,0,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px; font-weight: 700; color: var(--gold);
+    font-family: var(--font-display); overflow: hidden; cursor: pointer;
+    transition: border-color 0.2s;
   }
 
-  .search-bar input {
-    padding-left: 40px;
-    background: white;
+  .profile-photo-circle:hover { border-color: var(--gold); }
+  .profile-photo-circle img { width: 100%; height: 100%; object-fit: cover; }
+
+  .photo-edit-btn {
+    position: absolute; bottom: 0; right: 0;
+    width: 26px; height: 26px;
+    background: var(--gold); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; cursor: pointer; border: 2px solid var(--bg-card);
+    transition: transform 0.2s;
   }
 
-  .search-icon {
-    position: absolute;
-    left: 14px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--ink-light);
-    font-size: 16px;
+  .photo-edit-btn:hover { transform: scale(1.1); }
+
+  .profile-info-name { font-family: var(--font-display); font-size: 20px; color: var(--text); margin-bottom: 2px; }
+  .profile-info-role { font-size: 13px; color: var(--text-muted); }
+
+  /* ===== SECTION CARD ===== */
+  .section-card {
+    background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 20px; margin-bottom: 16px;
   }
 
-  /* ===== REVIEW CARD ===== */
-  .review-card {
-    background: var(--cream);
-    border-radius: 10px;
-    padding: 16px;
-    margin-bottom: 12px;
+  .section-card-title {
+    font-size: 13px; font-weight: 700; color: var(--gold);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* ===== MACHINES TAG INPUT ===== */
+  .tag-input-wrap {
+    background: var(--bg-input); border: 1.5px solid var(--border); border-radius: var(--radius-sm);
+    padding: 8px; min-height: 48px; display: flex; flex-wrap: wrap; gap: 6px; cursor: text;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .tag-input-wrap:focus-within { border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-glow); }
+
+  .machine-tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: var(--gold-dim); border: 1px solid rgba(255,184,0,0.2);
+    color: var(--gold); border-radius: 20px; padding: 4px 10px; font-size: 12px; font-weight: 600;
+    animation: tagIn 0.15s ease;
+  }
+
+  @keyframes tagIn { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+  .machine-tag-x { cursor: pointer; font-size: 14px; color: var(--gold); line-height: 1; margin-left: 2px; }
+  .machine-tag-x:hover { color: var(--rose); }
+
+  .tag-input-field {
+    background: none; border: none; outline: none; color: var(--text);
+    font-family: var(--font-body); font-size: 13px; min-width: 120px; flex: 1; padding: 4px 4px;
+  }
+
+  .tag-input-hint { font-size: 11px; color: var(--text-dim); margin-top: 6px; }
+
+  /* ===== SURVEYOR PUBLIC PROFILE MODAL ===== */
+  .surveyor-profile-modal .modal { max-width: 600px; }
+
+  .sp-hero {
+    display: flex; align-items: center; gap: 18px;
+    padding-bottom: 20px; margin-bottom: 20px; border-bottom: 1px solid var(--border);
+  }
+
+  .sp-avatar {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--gold-dim), var(--bg-elevated));
+    border: 2px solid rgba(255,184,0,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; font-weight: 700; color: var(--gold);
+    font-family: var(--font-display); overflow: hidden; flex-shrink: 0;
+  }
+
+  .sp-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+  .sp-name { font-family: var(--font-display); font-size: 22px; color: var(--text); margin-bottom: 4px; }
+  .sp-meta { font-size: 13px; color: var(--text-muted); }
+
+  .sp-stars { color: var(--gold); font-size: 18px; letter-spacing: 2px; margin-top: 4px; }
+
+  .sp-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px;
+  }
+
+  .sp-item {
+    background: var(--bg-elevated); border-radius: 10px; padding: 14px;
     border: 1px solid var(--border);
   }
 
-  .review-stars { color: var(--gold); font-size: 16px; margin-bottom: 6px; }
+  .sp-item-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 4px; }
+  .sp-item-value { font-size: 14px; color: var(--text); font-weight: 500; }
 
-  .review-text { font-size: 14px; color: var(--ink); line-height: 1.6; }
+  .sp-machines { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
 
-  .review-meta { font-size: 12px; color: var(--ink-light); margin-top: 8px; }
+  .sp-machine-tag {
+    background: var(--gold-dim); border: 1px solid rgba(255,184,0,0.2);
+    color: var(--gold); border-radius: 20px; padding: 4px 10px; font-size: 11px; font-weight: 600;
+  }
 
-  /* ===== RESPONSIVE ===== */
+  .sp-section-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--text-dim); margin: 18px 0 10px; display: flex; align-items: center; gap: 8px;
+  }
+
+  .sp-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ===== UNLOCK FLOW ===== */
+  .unlock-highlight {
+    background: linear-gradient(135deg, rgba(255,184,0,0.08), rgba(255,140,0,0.05));
+    border: 1px solid rgba(255,184,0,0.2); border-radius: 10px; padding: 16px; margin-bottom: 22px;
+  }
+
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-dim); }
+
+  /* ===== FAB ===== */
+  .fab { display: none; }
+
   @media (max-width: 640px) {
-    .content { padding: 16px; }
-    .card { padding: 16px; }
-    .card-meta { grid-template-columns: 1fr 1fr; }
-    .stats-grid { grid-template-columns: 1fr 1fr; }
-    .navbar { padding: 0 16px; }
-    .tab-nav { padding: 0 12px; }
-    .tab-nav-item { padding: 14px 12px; font-size: 13px; }
+    .fab {
+      display: flex; position: fixed; bottom: 24px; right: 20px;
+      width: 52px; height: 52px;
+      background: linear-gradient(135deg, var(--gold), var(--amber));
+      border-radius: 50%; align-items: center; justify-content: center; font-size: 22px;
+      box-shadow: 0 4px 20px rgba(255,184,0,0.4); cursor: pointer; z-index: 90; border: none; transition: transform 0.2s;
+    }
+    .fab:active { transform: scale(0.93); }
   }
 
-  /* Form row */
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
+  /* ===== PHOTO PREVIEW ===== */
+  .photo-preview-area {
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    padding: 20px; background: var(--bg-elevated); border-radius: var(--radius);
+    border: 2px dashed var(--border); cursor: pointer; transition: border-color 0.2s;
+    margin-bottom: 18px;
   }
 
-  @media (max-width: 480px) {
-    .form-row { grid-template-columns: 1fr; }
+  .photo-preview-area:hover { border-color: var(--gold); }
+
+  .photo-preview-area .preview-img {
+    width: 100px; height: 100px; border-radius: 50%; object-fit: cover;
+    border: 2px solid var(--gold-dim);
   }
 
-  /* Badge for unlock count */
-  .unlock-count {
-    font-size: 12px;
-    color: var(--ink-light);
-    font-style: italic;
-    margin-top: 4px;
+  .photo-preview-area .preview-placeholder {
+    width: 100px; height: 100px; border-radius: 50%;
+    background: var(--bg-input); border: 2px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px; color: var(--text-dim);
   }
+
+  .photo-label { font-size: 13px; color: var(--text-muted); text-align: center; line-height: 1.5; }
+  .photo-label strong { color: var(--gold); display: block; font-size: 14px; margin-bottom: 2px; }
+
+  /* Browse surveyors link */
+  .view-profile-link {
+    font-size: 12px; color: var(--teal); cursor: pointer;
+    text-decoration: underline; text-underline-offset: 2px;
+    transition: color 0.2s;
+  }
+
+  .view-profile-link:hover { color: var(--gold); }
 </style>
 </head>
 <body>
@@ -633,70 +789,92 @@
 <!-- ===== AUTH PAGE ===== -->
 <div id="auth-page" class="page active">
   <div class="auth-page">
-    <div class="auth-container">
-      <div class="auth-header">
-        <div class="auth-logo">🗺 SurveyorLink</div>
-        <div class="auth-tagline">India's Survey Professional Marketplace</div>
+    <div class="auth-bg"></div>
+    <div class="auth-bg-grid"></div>
+
+    <div class="auth-left">
+      <div class="auth-left-content">
+        <div class="auth-brand">
+          <div class="auth-brand-icon">🗺</div>
+          <div class="auth-brand-name">SurveyorLink</div>
+        </div>
+        <h1 class="auth-headline">India's Survey<br><em>Professional</em><br>Marketplace</h1>
+        <p class="auth-subhead">Connect with certified surveyors across India. Post your requirements, get contacted by professionals, track every step.</p>
+        <div class="auth-pills">
+          <div class="auth-pill"><span>📐</span> Land Surveys</div>
+          <div class="auth-pill"><span>🏢</span> Building Surveys</div>
+          <div class="auth-pill"><span>📡</span> GPS Surveys</div>
+          <div class="auth-pill"><span>🗺</span> Topographic</div>
+          <div class="auth-pill"><span>⭐</span> Verified Reviews</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-right">
+      <div class="auth-mobile-brand">
+        <div class="auth-mobile-brand-icon">🗺</div>
+        <div class="auth-mobile-brand-name">SurveyorLink</div>
       </div>
 
-      <div class="auth-tabs">
-        <button class="auth-tab active" onclick="switchAuthTab('login')">Login</button>
-        <button class="auth-tab" onclick="switchAuthTab('register')">Register</button>
+      <h2 class="auth-right-title">Welcome back</h2>
+      <p class="auth-right-sub">Sign in or create your account</p>
+
+      <div class="auth-seg">
+        <button class="auth-seg-btn active" onclick="switchAuthTab('login')">Sign In</button>
+        <button class="auth-seg-btn" onclick="switchAuthTab('register')">Register</button>
       </div>
 
-      <div class="auth-body">
-        <div id="auth-alert"></div>
+      <div id="auth-alert"></div>
 
-        <!-- LOGIN FORM -->
-        <div id="login-form">
-          <div class="form-group">
-            <label>Email or Phone</label>
-            <input type="text" id="login-identifier" placeholder="email@example.com or 9876543210">
-          </div>
-          <div class="form-group">
-            <label>Password</label>
-            <input type="password" id="login-password" placeholder="Your password">
-          </div>
-          <button class="btn btn-primary" onclick="doLogin()" id="login-btn">Login</button>
+      <div id="login-form">
+        <div class="form-group">
+          <label>Email or Phone</label>
+          <input type="text" id="login-identifier" placeholder="email@example.com or 9876543210" autocomplete="username">
         </div>
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="login-password" placeholder="Your password" autocomplete="current-password">
+        </div>
+        <button class="btn btn-primary" onclick="doLogin()" id="login-btn">Sign In</button>
+      </div>
 
-        <!-- REGISTER FORM -->
-        <div id="register-form" style="display:none">
-          <div class="form-group">
-            <label>I am a...</label>
-            <div class="role-selector">
-              <div class="role-btn selected" id="role-customer" onclick="selectRole('customer')">
-                🏠 Customer
-              </div>
-              <div class="role-btn" id="role-surveyor" onclick="selectRole('surveyor')">
-                📐 Surveyor
-              </div>
+      <div id="register-form" style="display:none">
+        <div class="form-group">
+          <label>I am a...</label>
+          <div class="role-grid">
+            <div class="role-card selected" id="role-customer" onclick="selectRole('customer')">
+              <div class="role-icon">🏠</div>
+              <div class="role-label">Customer</div>
+            </div>
+            <div class="role-card" id="role-surveyor" onclick="selectRole('surveyor')">
+              <div class="role-icon">📐</div>
+              <div class="role-label">Surveyor</div>
             </div>
           </div>
-          <div class="form-group">
-            <label>Full Name *</label>
-            <input type="text" id="reg-name" placeholder="Your full name">
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Email</label>
-              <input type="email" id="reg-email" placeholder="email@example.com">
-            </div>
-            <div class="form-group">
-              <label>Phone</label>
-              <input type="tel" id="reg-phone" placeholder="9876543210">
-            </div>
-          </div>
-          <div class="form-group" id="company-field" style="display:none">
-            <label>Company / Firm Name</label>
-            <input type="text" id="reg-company" placeholder="Survey Associates Ltd.">
-          </div>
-          <div class="form-group">
-            <label>Password *</label>
-            <input type="password" id="reg-password" placeholder="Min 6 characters">
-          </div>
-          <button class="btn btn-primary" onclick="doRegister()" id="register-btn">Create Account</button>
         </div>
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" id="reg-name" placeholder="Your full name" autocomplete="name">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="reg-email" placeholder="email@example.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" id="reg-phone" placeholder="9876543210" autocomplete="tel">
+          </div>
+        </div>
+        <div class="form-group" id="company-field" style="display:none">
+          <label>Company / Firm Name</label>
+          <input type="text" id="reg-company" placeholder="Survey Associates Ltd.">
+        </div>
+        <div class="form-group">
+          <label>Password *</label>
+          <input type="password" id="reg-password" placeholder="Min 6 characters" autocomplete="new-password">
+        </div>
+        <button class="btn btn-primary" onclick="doRegister()" id="register-btn">Create Account</button>
       </div>
     </div>
   </div>
@@ -704,52 +882,53 @@
 
 <!-- ===== MAIN APP PAGE ===== -->
 <div id="app-page" class="page">
-  <div class="app-layout">
-    <!-- NAVBAR -->
-    <nav class="navbar">
-      <div class="nav-logo">🗺 SurveyorLink</div>
-      <div class="nav-user">
-        <span id="nav-username">User</span>
-        <span class="nav-badge" id="nav-role">Customer</span>
-        <button class="btn-logout" onclick="doLogout()">Logout</button>
-      </div>
-    </nav>
-
-    <!-- TAB NAV -->
-    <div class="tab-nav" id="tab-nav"></div>
-
-    <!-- CONTENT -->
-    <div class="content">
-      <!-- CUSTOMER TABS -->
-      <div id="tab-my-listings" class="tab-pane"></div>
-      <div id="tab-create-listing" class="tab-pane"></div>
-
-      <!-- SURVEYOR TABS -->
-      <div id="tab-browse-listings" class="tab-pane"></div>
-      <div id="tab-my-contacts" class="tab-pane"></div>
-      <div id="tab-my-profile" class="tab-pane"></div>
+  <nav class="navbar">
+    <div class="nav-logo">
+      <div class="nav-logo-icon">🗺</div>
+      <div class="nav-logo-text">SurveyorLink</div>
     </div>
+    <div class="nav-right">
+      <div class="nav-user-info">
+        <div class="nav-avatar" id="nav-avatar">U</div>
+        <span class="nav-name" id="nav-username">User</span>
+        <span class="nav-role-badge" id="nav-role-badge">Customer</span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Sign out</button>
+    </div>
+  </nav>
+
+  <div class="tab-nav" id="tab-nav"></div>
+
+  <div class="content">
+    <div id="tab-my-listings" class="tab-pane"></div>
+    <div id="tab-create-listing" class="tab-pane"></div>
+    <div id="tab-browse-listings" class="tab-pane"></div>
+    <div id="tab-my-contacts" class="tab-pane"></div>
+    <div id="tab-my-profile" class="tab-pane"></div>
   </div>
+
+  <button class="fab" id="mobile-fab" onclick="showTab('create-listing')" title="New Listing">＋</button>
 </div>
 
 <!-- ===== REVIEW MODAL ===== -->
 <div class="modal-overlay" id="review-modal">
   <div class="modal">
-    <h2 class="modal-title">⭐ Rate this Surveyor</h2>
+    <h2 class="modal-title">Rate this Surveyor</h2>
+    <p class="modal-sub">Share your experience to help others find great surveyors.</p>
     <div id="review-modal-alert"></div>
     <input type="hidden" id="review-unlock-id">
-    <input type="hidden" id="review-surveyor-name-store">
     <div class="form-group">
-      <label>Surveyor: <span id="review-surveyor-name" style="color:var(--ink);font-weight:600"></span></label>
+      <label>Surveyor</label>
+      <div style="font-size:15px;font-weight:600;color:var(--text)" id="review-surveyor-name"></div>
     </div>
     <div class="form-group">
       <label>Your Rating</label>
       <div class="star-rating" id="star-rating">
-        <span class="star" data-val="1" onclick="setRating(1)">★</span>
-        <span class="star" data-val="2" onclick="setRating(2)">★</span>
-        <span class="star" data-val="3" onclick="setRating(3)">★</span>
-        <span class="star" data-val="4" onclick="setRating(4)">★</span>
-        <span class="star" data-val="5" onclick="setRating(5)">★</span>
+        <span class="star" onclick="setRating(1)">★</span>
+        <span class="star" onclick="setRating(2)">★</span>
+        <span class="star" onclick="setRating(3)">★</span>
+        <span class="star" onclick="setRating(4)">★</span>
+        <span class="star" onclick="setRating(5)">★</span>
       </div>
     </div>
     <div class="form-group">
@@ -766,16 +945,24 @@
 <!-- ===== UNLOCK CONFIRM MODAL ===== -->
 <div class="modal-overlay" id="unlock-modal">
   <div class="modal">
-    <h2 class="modal-title">🔓 Unlock Contact Details</h2>
-    <p style="color:var(--ink-light);font-size:14px;margin-bottom:20px">
-      You are about to unlock the customer's phone number for this survey listing. This will allow you to contact them directly.
-    </p>
-    <div id="unlock-listing-preview" style="background:var(--cream);border-radius:8px;padding:16px;margin-bottom:20px;border:1px solid var(--border)"></div>
+    <h2 class="modal-title">🔓 Unlock Contact</h2>
+    <p class="modal-sub">You'll be able to see the customer's phone number and contact them directly.</p>
+    <div class="unlock-highlight" id="unlock-listing-preview"></div>
     <div class="btn-group">
-      <button class="btn btn-gold" onclick="confirmUnlock()" id="confirm-unlock-btn" style="flex:1">
-        🔓 Confirm Unlock
-      </button>
+      <button class="btn btn-teal" onclick="confirmUnlock()" id="confirm-unlock-btn" style="flex:1">Confirm Unlock</button>
       <button class="btn btn-outline" onclick="closeModal('unlock-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SURVEYOR PUBLIC PROFILE MODAL ===== -->
+<div class="modal-overlay surveyor-profile-modal" id="surveyor-profile-modal">
+  <div class="modal" style="max-width:600px">
+    <div id="sp-modal-content">
+      <div class="empty-state"><span class="empty-icon">⏳</span><h3>Loading…</h3></div>
+    </div>
+    <div style="margin-top:20px">
+      <button class="btn btn-outline" onclick="closeModal('surveyor-profile-modal')" style="width:100%">Close</button>
     </div>
   </div>
 </div>
@@ -786,9 +973,10 @@ let currentUser = null;
 let selectedRole = 'customer';
 let selectedRating = 0;
 let pendingUnlockListingId = null;
-let pendingUnlockListingData = null;
+let profilePhotoBase64 = null;
+let machinesList = [];
 
-// ===== HELPERS =====
+/* ===== HELPERS ===== */
 function getToken() { return localStorage.getItem('token'); }
 function setToken(t) { localStorage.setItem('token', t); }
 function clearToken() { localStorage.removeItem('token'); localStorage.removeItem('user'); }
@@ -805,26 +993,30 @@ async function apiFetch(url, options = {}) {
 function showAlert(containerId, msg, type = 'error') {
   const el = document.getElementById(containerId);
   if (!el) return;
-  el.innerHTML = `<div class="alert alert-${type}">${msg}</div>`;
-  setTimeout(() => { el.innerHTML = ''; }, 5000);
+  const icon = type === 'error' ? '⚠' : type === 'success' ? '✓' : 'ℹ';
+  el.innerHTML = `<div class="alert alert-${type}"><span>${icon}</span><span>${msg}</span></div>`;
+  setTimeout(() => { if (el) el.innerHTML = ''; }, 5000);
 }
 
-function closeModal(id) {
-  document.getElementById(id).classList.remove('open');
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+
+function starsHtml(rating, size = 16) {
+  const r = Math.round(rating || 0);
+  return `<span style="color:var(--gold);font-size:${size}px;letter-spacing:2px">${'★'.repeat(r)}${'☆'.repeat(5 - r)}</span>`;
 }
 
-function openModal(id) {
-  document.getElementById(id).classList.add('open');
-}
-
-// ===== AUTH =====
+/* ===== AUTH ===== */
 function switchAuthTab(tab) {
-  document.querySelectorAll('.auth-tab').forEach((t, i) => {
-    t.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
+  document.querySelectorAll('.auth-seg-btn').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
   });
   document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
   document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
   document.getElementById('auth-alert').innerHTML = '';
+  const titles = { login: ['Welcome back', 'Sign in to your account'], register: ['Join SurveyorLink', 'Create your free account'] };
+  document.querySelector('.auth-right-title').textContent = titles[tab][0];
+  document.querySelector('.auth-right-sub').textContent = titles[tab][1];
 }
 
 function selectRole(role) {
@@ -840,14 +1032,13 @@ async function doLogin() {
   if (!identifier || !password) { showAlert('auth-alert', 'Please fill all fields'); return; }
 
   const btn = document.getElementById('login-btn');
-  btn.innerHTML = '<span class="spinner"></span>';
-  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Signing in…'; btn.disabled = true;
 
   const isEmail = identifier.includes('@');
   const payload = isEmail ? { email: identifier, password } : { phone: identifier, password };
   const { ok, data } = await apiFetch('/login', { method: 'POST', body: JSON.stringify(payload) });
 
-  btn.innerHTML = 'Login'; btn.disabled = false;
+  btn.innerHTML = 'Sign In'; btn.disabled = false;
 
   if (ok) {
     setToken(data.token);
@@ -870,10 +1061,12 @@ async function doRegister() {
   if (!email && !phone) { showAlert('auth-alert', 'Provide email or phone'); return; }
 
   const btn = document.getElementById('register-btn');
-  btn.innerHTML = '<span class="spinner"></span>'; btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Creating…'; btn.disabled = true;
 
-  const payload = { name, email, phone, password, role: selectedRole, company };
-  const { ok, data } = await apiFetch('/register', { method: 'POST', body: JSON.stringify(payload) });
+  const { ok, data } = await apiFetch('/register', {
+    method: 'POST',
+    body: JSON.stringify({ name, email, phone, password, role: selectedRole, company })
+  });
 
   btn.innerHTML = 'Create Account'; btn.disabled = false;
 
@@ -896,13 +1089,24 @@ function doLogout() {
   document.getElementById('login-password').value = '';
 }
 
-// ===== APP INIT =====
+/* ===== APP INIT ===== */
 async function initApp() {
   document.getElementById('auth-page').classList.remove('active');
   document.getElementById('app-page').classList.add('active');
 
+  updateNavAvatar();
   document.getElementById('nav-username').textContent = currentUser.name;
-  document.getElementById('nav-role').textContent = currentUser.role === 'customer' ? '🏠 Customer' : '📐 Surveyor';
+
+  const roleBadge = document.getElementById('nav-role-badge');
+  if (currentUser.role === 'customer') {
+    roleBadge.textContent = 'Customer';
+    roleBadge.className = 'nav-role-badge badge-customer';
+    document.getElementById('mobile-fab').style.display = '';
+  } else {
+    roleBadge.textContent = 'Surveyor';
+    roleBadge.className = 'nav-role-badge badge-surveyor';
+    document.getElementById('mobile-fab').style.display = 'none';
+  }
 
   buildTabNav();
   if (currentUser.role === 'customer') {
@@ -917,14 +1121,27 @@ async function initApp() {
   }
 }
 
+function updateNavAvatar() {
+  const el = document.getElementById('nav-avatar');
+  const photo = currentUser?.profile?.photo;
+  if (photo) {
+    el.innerHTML = `<img src="${photo}" alt="avatar">`;
+  } else {
+    const initials = currentUser.name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+    el.textContent = initials;
+  }
+}
+
 function buildTabNav() {
   const nav = document.getElementById('tab-nav');
   const tabs = currentUser.role === 'customer'
-    ? [['my-listings', '📋 My Listings'], ['create-listing', '+ New Listing']]
-    : [['browse-listings', '🔍 Browse Listings'], ['my-contacts', '📞 My Contacts'], ['my-profile', '👤 Profile']];
+    ? [['my-listings', '📋', 'My Listings'], ['create-listing', '✚', 'New Listing']]
+    : [['browse-listings', '🔍', 'Browse'], ['my-contacts', '📞', 'My Contacts'], ['my-profile', '👤', 'My Profile']];
 
-  nav.innerHTML = tabs.map(([id, label]) =>
-    `<div class="tab-nav-item" id="tabnav-${id}" onclick="showTab('${id}')">${label}</div>`
+  nav.innerHTML = tabs.map(([id, icon, label]) =>
+    `<div class="tab-nav-item" id="tabnav-${id}" onclick="showTab('${id}')">
+      <span class="tab-icon">${icon}</span>${label}
+    </div>`
   ).join('');
 }
 
@@ -935,70 +1152,83 @@ function showTab(tabId) {
   document.getElementById(`tabnav-${tabId}`)?.classList.add('active');
 }
 
-// ===== CUSTOMER: MY LISTINGS =====
+/* ===== CUSTOMER: MY LISTINGS ===== */
 async function loadCustomerListings() {
   const container = document.getElementById('tab-my-listings');
   container.innerHTML = `
     <div class="section-header">
-      <h2 class="section-title">My Survey Listings</h2>
-      <button class="btn btn-primary" style="width:auto" onclick="showTab('create-listing')">+ New Listing</button>
+      <h2 class="section-title">My Listings</h2>
+      <button class="btn btn-primary" style="width:auto;padding:11px 20px" onclick="showTab('create-listing')">＋ New Listing</button>
     </div>
-    <div id="customer-listings-content"><p>Loading...</p></div>
+    <div id="customer-listings-content">
+      <div class="empty-state"><span class="empty-icon">⏳</span><h3>Loading…</h3></div>
+    </div>
   `;
 
   const { ok, data } = await apiFetch('/customer/dashboard');
-  if (!ok) { document.getElementById('customer-listings-content').innerHTML = '<p>Failed to load.</p>'; return; }
+  if (!ok) { document.getElementById('customer-listings-content').innerHTML = '<div class="alert alert-error"><span>⚠</span><span>Failed to load listings.</span></div>'; return; }
 
   const { listings, stats } = data;
 
   let html = `
     <div class="stats-grid">
-      <div class="stat-card"><div class="stat-number">${stats.total_listings}</div><div class="stat-label">Total Listings</div></div>
-      <div class="stat-card"><div class="stat-number">${stats.total_unlocks}</div><div class="stat-label">Surveyors Interested</div></div>
-      <div class="stat-card"><div class="stat-number">${stats.contacted}</div><div class="stat-label">Contacted</div></div>
+      <div class="stat-card">
+        <div class="stat-number">${stats.total_listings}</div>
+        <div class="stat-label">Listings</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">${stats.total_unlocks}</div>
+        <div class="stat-label">Interested</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">${stats.contacted}</div>
+        <div class="stat-label">Contacted</div>
+      </div>
     </div>
   `;
 
   if (listings.length === 0) {
-    html += `<div class="empty-state"><div class="empty-state-icon">📋</div><h3>No listings yet</h3><p>Create your first survey listing to find professionals.</p></div>`;
+    html += `<div class="empty-state"><span class="empty-icon">📋</span><h3>No listings yet</h3><p>Post your first survey requirement to get contacted by professionals.</p></div>`;
   } else {
     html += listings.map(listing => `
       <div class="card">
         <div class="card-header">
           <div>
             <h3 class="card-title">${listing.survey_type}</h3>
-            <div class="unlock-count">${listing.unlocks.length} surveyor(s) interested</div>
+            <div class="card-sub">${listing.area}</div>
           </div>
-          <span class="tag tag-survey">${listing.survey_type.split(' ')[0]}</span>
+          <div class="card-badges">
+            <span class="tag tag-survey">${listing.survey_type.split(' ')[0]}</span>
+            ${listing.unlocks.length > 0 ? `<span class="tag tag-pending">${listing.unlocks.length} interested</span>` : ''}
+          </div>
         </div>
         <div class="card-meta">
-          <div class="meta-item"><label>Area</label><span>${listing.area}</span></div>
           <div class="meta-item"><label>Date</label><span>${listing.date}</span></div>
           <div class="meta-item"><label>Time</label><span>${listing.time}</span></div>
           <div class="meta-item"><label>Phone</label><span>${listing.phone}</span></div>
         </div>
-        <p style="font-size:13px;color:var(--ink-light);margin-bottom:12px">${listing.address}</p>
-        ${listing.description ? `<p style="font-size:13px;color:var(--ink);margin-bottom:12px">${listing.description}</p>` : ''}
+        <p class="card-desc">${listing.address}${listing.description ? ' — ' + listing.description : ''}</p>
 
         ${listing.unlocks.length > 0 ? `
-          <div style="margin-top:12px">
-            <div style="font-size:13px;font-weight:600;color:var(--ink-light);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">Surveyor Responses</div>
-            <div class="unlock-list">
-              ${listing.unlocks.map(u => `
-                <div class="unlock-item">
-                  <div>
+          <div class="divider-label">Surveyor Responses</div>
+          <div class="unlock-list">
+            ${listing.unlocks.map(u => `
+              <div class="unlock-item">
+                <div class="unlock-item-left">
+                  <div style="display:flex;align-items:center;gap:8px">
                     <div class="unlock-surveyor">${u.surveyor_name}</div>
-                    <span class="tag tag-${u.status || 'pending'}">${(u.status || 'pending').replace('_', ' ')}</span>
+                    <span class="view-profile-link" onclick="viewSurveyorProfile('${u.surveyor_id}')">View Profile</span>
                   </div>
-                  <div class="btn-group">
-                    ${u.status !== 'contacted' ? `<button class="btn btn-green btn-sm" onclick="markStatus('${u.unlock_id}', 'contacted')">✓ Mark Contacted</button>` : ''}
-                    ${u.status === 'pending' ? `<button class="btn btn-red btn-sm" onclick="markStatus('${u.unlock_id}', 'not_contacted')">✗ Not Contacted</button>` : ''}
-                    ${u.status === 'contacted' && !u.has_review ? `<button class="btn btn-gold btn-sm" onclick="openReviewModal('${u.unlock_id}', '${u.surveyor_name}')">⭐ Review</button>` : ''}
-                    ${u.has_review ? `<span class="tag tag-contacted">✓ Reviewed</span>` : ''}
-                  </div>
+                  <span class="tag tag-${u.status || 'pending'}" style="font-size:9px">${(u.status || 'pending').replace('_', ' ')}</span>
                 </div>
-              `).join('')}
-            </div>
+                <div class="btn-group">
+                  ${u.status !== 'contacted' ? `<button class="btn btn-teal btn-sm" onclick="markStatus('${u.unlock_id}', 'contacted')">✓ Contacted</button>` : ''}
+                  ${u.status === 'pending' ? `<button class="btn btn-rose btn-sm" onclick="markStatus('${u.unlock_id}', 'not_contacted')">✗ Skip</button>` : ''}
+                  ${u.status === 'contacted' && !u.has_review ? `<button class="btn btn-ghost btn-sm" onclick="openReviewModal('${u.unlock_id}', '${u.surveyor_name}')">⭐ Review</button>` : ''}
+                  ${u.has_review ? `<span class="tag tag-contacted">✓ Reviewed</span>` : ''}
+                </div>
+              </div>
+            `).join('')}
           </div>
         ` : ''}
       </div>
@@ -1008,21 +1238,21 @@ async function loadCustomerListings() {
   document.getElementById('customer-listings-content').innerHTML = html;
 }
 
-// ===== CUSTOMER: CREATE LISTING =====
+/* ===== CUSTOMER: CREATE LISTING ===== */
 async function buildCreateListingForm() {
   const { data } = await apiFetch('/survey-types');
   const types = data.survey_types || [];
 
   document.getElementById('tab-create-listing').innerHTML = `
     <div class="section-header">
-      <h2 class="section-title">Create Survey Listing</h2>
+      <h2 class="section-title">New Survey Listing</h2>
     </div>
-    <div class="card" style="max-width:640px">
+    <div class="form-card">
       <div id="create-listing-alert"></div>
       <div class="form-group">
         <label>Survey Type *</label>
         <select id="cl-type">
-          <option value="">Select survey type...</option>
+          <option value="">Select survey type…</option>
           ${types.map(t => `<option value="${t}">${t}</option>`).join('')}
         </select>
       </div>
@@ -1038,7 +1268,7 @@ async function buildCreateListingForm() {
       </div>
       <div class="form-group">
         <label>Full Address *</label>
-        <input type="text" id="cl-address" placeholder="Plot 12, Survey Nagar, Pune - 411001">
+        <input type="text" id="cl-address" placeholder="Plot 12, Survey Nagar, Pune – 411001">
       </div>
       <div class="form-row">
         <div class="form-group">
@@ -1052,12 +1282,11 @@ async function buildCreateListingForm() {
       </div>
       <div class="form-group">
         <label>Description</label>
-        <textarea id="cl-description" placeholder="Describe the survey requirements, plot size, any specific needs..."></textarea>
+        <textarea id="cl-description" placeholder="Describe the survey requirements, plot size, any specific needs…"></textarea>
       </div>
-      <button class="btn btn-primary" onclick="submitListing()" id="submit-listing-btn">📤 Post Listing</button>
+      <button class="btn btn-primary" onclick="submitListing()" id="submit-listing-btn">Post Listing</button>
     </div>
   `;
-  // Set default date to today
   document.getElementById('cl-date').valueAsDate = new Date();
 }
 
@@ -1077,14 +1306,13 @@ async function submitListing() {
   }
 
   const btn = document.getElementById('submit-listing-btn');
-  btn.innerHTML = '<span class="spinner"></span> Posting...'; btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Posting…'; btn.disabled = true;
 
   const { ok, data } = await apiFetch('/create-listing', { method: 'POST', body: JSON.stringify(payload) });
-  btn.innerHTML = '📤 Post Listing'; btn.disabled = false;
+  btn.innerHTML = 'Post Listing'; btn.disabled = false;
 
   if (ok) {
-    showAlert('create-listing-alert', '✅ Listing posted successfully!', 'success');
-    // Clear form
+    showAlert('create-listing-alert', 'Listing posted successfully!', 'success');
     ['cl-type','cl-area','cl-address','cl-time','cl-phone','cl-description'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.value = '';
@@ -1095,7 +1323,7 @@ async function submitListing() {
   }
 }
 
-// ===== CUSTOMER: MARK STATUS =====
+/* ===== CUSTOMER: MARK STATUS ===== */
 async function markStatus(unlockId, action) {
   const endpoint = action === 'contacted' ? '/mark-contacted' : '/mark-not-contacted';
   const { ok, data } = await apiFetch(endpoint, { method: 'POST', body: JSON.stringify({ unlock_id: unlockId }) });
@@ -1103,7 +1331,7 @@ async function markStatus(unlockId, action) {
   else alert(data.error || 'Failed to update');
 }
 
-// ===== REVIEW =====
+/* ===== REVIEW ===== */
 function openReviewModal(unlockId, surveyorName) {
   document.getElementById('review-unlock-id').value = unlockId;
   document.getElementById('review-surveyor-name').textContent = surveyorName;
@@ -1138,30 +1366,101 @@ async function submitReview() {
 
   btn.innerHTML = 'Submit Review'; btn.disabled = false;
 
-  if (ok) {
-    closeModal('review-modal');
-    loadCustomerListings();
-  } else {
-    showAlert('review-modal-alert', data.error || 'Failed to submit review');
-  }
+  if (ok) { closeModal('review-modal'); loadCustomerListings(); }
+  else showAlert('review-modal-alert', data.error || 'Failed to submit review');
 }
 
-// ===== SURVEYOR: BROWSE LISTINGS =====
+/* ===== SURVEYOR PUBLIC PROFILE (Customer view) ===== */
+async function viewSurveyorProfile(surveyorId) {
+  openModal('surveyor-profile-modal');
+  document.getElementById('sp-modal-content').innerHTML = `<div class="empty-state"><span class="empty-icon">⏳</span><h3>Loading…</h3></div>`;
+
+  // Try to fetch public profile from API
+  const { ok, data } = await apiFetch(`/surveyor/public-profile/${surveyorId}`);
+
+  let surveyor, reviews = [];
+  if (ok) {
+    surveyor = data.surveyor;
+    reviews = data.reviews || [];
+  } else {
+    // Fallback: show error
+    document.getElementById('sp-modal-content').innerHTML = `<div class="alert alert-error"><span>⚠</span><span>Could not load profile.</span></div>`;
+    return;
+  }
+
+  const profile = surveyor.profile || {};
+  const avgRating = surveyor.stats?.average_rating || 0;
+  const reviewsCount = surveyor.stats?.reviews_count || 0;
+  const initials = (surveyor.name || 'S').split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+  const photoSrc = profile.photo;
+
+  const machinesHtml = (profile.machines && profile.machines.length > 0)
+    ? `<div class="sp-machines">${profile.machines.map(m => `<span class="sp-machine-tag">🔧 ${m}</span>`).join('')}</div>`
+    : '<span style="color:var(--text-dim);font-size:13px">Not specified</span>';
+
+  document.getElementById('sp-modal-content').innerHTML = `
+    <div class="sp-hero">
+      <div class="sp-avatar">
+        ${photoSrc ? `<img src="${photoSrc}" alt="profile">` : initials}
+      </div>
+      <div>
+        <div class="sp-name">${surveyor.name}</div>
+        <div class="sp-meta">📐 Surveyor${profile.company ? ` · ${profile.company}` : ''}</div>
+        ${avgRating ? `<div class="sp-stars">${'★'.repeat(Math.round(avgRating))}${'☆'.repeat(5 - Math.round(avgRating))} <span style="font-size:12px;color:var(--text-muted);font-family:var(--font-body)">${avgRating.toFixed(1)} (${reviewsCount} reviews)</span></div>` : `<div class="sp-stars" style="font-size:12px;color:var(--text-dim);font-family:var(--font-body)">No reviews yet</div>`}
+      </div>
+    </div>
+
+    <div class="sp-grid">
+      ${profile.owner_name ? `<div class="sp-item"><div class="sp-item-label">Owner / Proprietor</div><div class="sp-item-value">👤 ${profile.owner_name}</div></div>` : ''}
+      ${profile.company ? `<div class="sp-item"><div class="sp-item-label">Firm / Company</div><div class="sp-item-value">🏢 ${profile.company}</div></div>` : ''}
+      ${profile.experience ? `<div class="sp-item"><div class="sp-item-label">Experience</div><div class="sp-item-value">🗓 ${profile.experience}</div></div>` : ''}
+      ${profile.license_no ? `<div class="sp-item"><div class="sp-item-label">License No.</div><div class="sp-item-value"><span class="tag tag-verified" style="font-size:10px">✓ Verified</span> ${profile.license_no}</div></div>` : ''}
+      ${profile.gst_no ? `<div class="sp-item"><div class="sp-item-label">GST Number</div><div class="sp-item-value">📋 ${profile.gst_no}</div></div>` : ''}
+      ${surveyor.phone ? `<div class="sp-item"><div class="sp-item-label">Phone</div><div class="sp-item-value">📞 ${surveyor.phone}</div></div>` : ''}
+    </div>
+
+    <div>
+      <div class="sp-section-label">Equipment & Machines</div>
+      ${machinesHtml}
+    </div>
+
+    ${reviews.length > 0 ? `
+      <div class="sp-section-label" style="margin-top:20px">Customer Reviews</div>
+      ${reviews.slice(0, 3).map(r => `
+        <div class="review-card">
+          <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
+          <div class="review-text">${r.review_text}</div>
+          <div class="review-meta">
+            <span>${r.customer_name}</span>
+            <span class="review-meta-dot"></span>
+            <span>${r.survey_type || ''}</span>
+            <span class="review-meta-dot"></span>
+            <span>${r.created_at ? new Date(r.created_at).toLocaleDateString('en-IN') : ''}</span>
+          </div>
+        </div>
+      `).join('')}
+    ` : ''}
+  `;
+}
+
+/* ===== SURVEYOR: BROWSE LISTINGS ===== */
 async function loadBrowseListings() {
   const container = document.getElementById('tab-browse-listings');
   container.innerHTML = `
     <div class="section-header">
-      <h2 class="section-title">Browse Survey Listings</h2>
+      <h2 class="section-title">Browse Listings</h2>
     </div>
-    <div class="search-bar">
+    <div class="search-wrap">
       <span class="search-icon">🔍</span>
-      <input type="text" id="listing-search" placeholder="Search by area, survey type..." oninput="filterListings()">
+      <input type="text" id="listing-search" placeholder="Search by area, survey type, address…" oninput="filterListings()">
     </div>
-    <div id="browse-listings-content">Loading...</div>
+    <div id="browse-listings-content">
+      <div class="empty-state"><span class="empty-icon">⏳</span><h3>Loading…</h3></div>
+    </div>
   `;
 
   const { ok, data } = await apiFetch('/listings');
-  if (!ok) { document.getElementById('browse-listings-content').innerHTML = 'Failed to load listings.'; return; }
+  if (!ok) { document.getElementById('browse-listings-content').innerHTML = '<div class="alert alert-error"><span>⚠</span><span>Failed to load listings.</span></div>'; return; }
 
   window._allListings = data.listings || [];
   renderBrowseListings(window._allListings);
@@ -1178,7 +1477,7 @@ function filterListings() {
 function renderBrowseListings(listings) {
   const container = document.getElementById('browse-listings-content');
   if (listings.length === 0) {
-    container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🔍</div><h3>No listings found</h3></div>`;
+    container.innerHTML = `<div class="empty-state"><span class="empty-icon">🔍</span><h3>No listings found</h3><p>Try a different search term.</p></div>`;
     return;
   }
 
@@ -1187,15 +1486,14 @@ function renderBrowseListings(listings) {
       <div class="card-header">
         <div>
           <h3 class="card-title">${l.survey_type}</h3>
-          <div style="font-size:13px;color:var(--ink-light)">${l.customer_name}</div>
+          <div class="card-sub">${l.customer_name} · ${l.area}</div>
         </div>
-        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <div class="card-badges">
           <span class="tag tag-survey">${l.survey_type.split(' ')[0]}</span>
           ${l.unlocked ? `<span class="tag tag-unlocked">🔓 Unlocked</span>` : ''}
         </div>
       </div>
       <div class="card-meta">
-        <div class="meta-item"><label>Area</label><span>${l.area}</span></div>
         <div class="meta-item"><label>Date</label><span>${l.date}</span></div>
         <div class="meta-item"><label>Time</label><span>${l.time}</span></div>
         <div class="meta-item">
@@ -1203,16 +1501,15 @@ function renderBrowseListings(listings) {
           <span class="${l.phone ? '' : 'phone-blur'}">${l.phone || '🔒 Unlock to view'}</span>
         </div>
       </div>
-      <p style="font-size:13px;color:var(--ink-light);margin-bottom:12px">${l.address}</p>
-      ${l.description ? `<p style="font-size:13px;color:var(--ink);margin-bottom:12px">${l.description}</p>` : ''}
+      <p class="card-desc">${l.address}${l.description ? ' — ' + l.description : ''}</p>
       ${l.unlocked
         ? `<div class="contact-box">
-            <div class="contact-label">✅ Contact Details Unlocked</div>
+            <div class="contact-label">✅ Contact Unlocked</div>
             <div class="contact-phone">📞 ${l.phone}</div>
-            <div style="font-size:12px;color:var(--green);margin-top:4px">Status: <strong>${(l.unlock_status || 'pending').replace('_', ' ')}</strong></div>
+            <div class="contact-status">Status: ${(l.unlock_status || 'pending').replace('_', ' ')}</div>
            </div>`
-        : `<button class="btn btn-gold" onclick="initiateUnlock('${l.id}', \`${l.survey_type} — ${l.area}\`)">
-             🔓 Unlock Contact Details
+        : `<button class="btn btn-teal" style="width:auto" onclick="initiateUnlock('${l.id}', \`${l.survey_type} — ${l.area}\`)">
+             🔓 Unlock Contact
            </button>`
       }
     </div>
@@ -1222,26 +1519,25 @@ function renderBrowseListings(listings) {
 function initiateUnlock(listingId, preview) {
   pendingUnlockListingId = listingId;
   document.getElementById('unlock-listing-preview').innerHTML = `
-    <div style="font-weight:600;color:var(--ink)">${preview}</div>
-    <div style="font-size:13px;color:var(--ink-light);margin-top:4px">Your subscription covers this unlock.</div>
+    <div class="modal-preview-title">${preview}</div>
+    <div class="modal-preview-sub">Your subscription covers this unlock.</div>
   `;
   openModal('unlock-modal');
 }
 
 async function confirmUnlock() {
   const btn = document.getElementById('confirm-unlock-btn');
-  btn.innerHTML = '<span class="spinner"></span>'; btn.disabled = true;
+  btn.innerHTML = '<span class="spinner spinner-light"></span> Unlocking…'; btn.disabled = true;
 
   const { ok, data } = await apiFetch('/unlock-contact', {
     method: 'POST',
     body: JSON.stringify({ listing_id: pendingUnlockListingId })
   });
 
-  btn.innerHTML = '🔓 Confirm Unlock'; btn.disabled = false;
+  btn.innerHTML = 'Confirm Unlock'; btn.disabled = false;
 
   if (ok) {
     closeModal('unlock-modal');
-    // Show success with contact
     alert(`✅ Contact Unlocked!\n📞 Phone: ${data.contact.phone}\n👤 Name: ${data.contact.name}`);
     await loadBrowseListings();
     await loadMyContacts();
@@ -1250,21 +1546,27 @@ async function confirmUnlock() {
   }
 }
 
-// ===== SURVEYOR: MY CONTACTS =====
+/* ===== SURVEYOR: MY CONTACTS ===== */
 async function loadMyContacts() {
   const container = document.getElementById('tab-my-contacts');
   container.innerHTML = `
-    <div class="section-header"><h2 class="section-title">My Unlocked Contacts</h2></div>
-    <div id="my-contacts-content">Loading...</div>
+    <div class="section-header"><h2 class="section-title">My Contacts</h2></div>
+    <div id="my-contacts-content">
+      <div class="empty-state"><span class="empty-icon">⏳</span><h3>Loading…</h3></div>
+    </div>
   `;
 
   const { ok, data } = await apiFetch('/surveyor/unlocked-listings');
-  if (!ok) { document.getElementById('my-contacts-content').innerHTML = 'Failed to load.'; return; }
+  if (!ok) { document.getElementById('my-contacts-content').innerHTML = '<div class="alert alert-error"><span>⚠</span><span>Failed to load.</span></div>'; return; }
 
   const contacts = data.unlocked_listings || [];
   if (contacts.length === 0) {
     document.getElementById('my-contacts-content').innerHTML = `
-      <div class="empty-state"><div class="empty-state-icon">📞</div><h3>No unlocked contacts yet</h3><p>Browse listings and unlock customer contacts.</p></div>
+      <div class="empty-state">
+        <span class="empty-icon">📞</span>
+        <h3>No contacts yet</h3>
+        <p>Browse listings and unlock customer contacts to see them here.</p>
+      </div>
     `;
     return;
   }
@@ -1272,93 +1574,273 @@ async function loadMyContacts() {
   document.getElementById('my-contacts-content').innerHTML = contacts.map(c => `
     <div class="card">
       <div class="card-header">
-        <h3 class="card-title">${c.listing.survey_type}</h3>
+        <div>
+          <h3 class="card-title">${c.listing.survey_type}</h3>
+          <div class="card-sub">${c.listing.area}</div>
+        </div>
         <span class="tag tag-${c.status}">${c.status.replace('_', ' ')}</span>
       </div>
       <div class="contact-box">
         <div class="contact-label">Customer Contact</div>
         <div class="contact-phone">📞 ${c.listing.phone}</div>
-        <div style="font-size:13px;color:var(--ink);margin-top:6px">👤 ${c.listing.customer_name}</div>
+        <div class="contact-name">👤 ${c.listing.customer_name}</div>
       </div>
       <div class="card-meta" style="margin-top:14px">
-        <div class="meta-item"><label>Area</label><span>${c.listing.area}</span></div>
         <div class="meta-item"><label>Date</label><span>${c.listing.date}</span></div>
         <div class="meta-item"><label>Time</label><span>${c.listing.time}</span></div>
+        <div class="meta-item"><label>Unlocked</label><span>${c.unlocked_at ? new Date(c.unlocked_at).toLocaleDateString('en-IN') : 'Recently'}</span></div>
       </div>
-      <p style="font-size:13px;color:var(--ink-light)">${c.listing.address}</p>
-      ${c.listing.description ? `<p style="font-size:13px;color:var(--ink);margin-top:8px">${c.listing.description}</p>` : ''}
-      <div style="margin-top:12px;font-size:12px;color:var(--ink-light);font-style:italic">
-        Unlocked: ${c.unlocked_at ? new Date(c.unlocked_at).toLocaleDateString() : 'Recently'}
-      </div>
+      <p class="card-desc">${c.listing.address}${c.listing.description ? ' — ' + c.listing.description : ''}</p>
     </div>
   `).join('');
 }
 
-// ===== SURVEYOR: MY PROFILE =====
+/* ===== SURVEYOR: MY PROFILE (Edit) ===== */
 async function loadMyProfile() {
   const container = document.getElementById('tab-my-profile');
-  container.innerHTML = `<div style="padding:20px">Loading...</div>`;
+  container.innerHTML = `<div class="empty-state"><span class="empty-icon">⏳</span><h3>Loading…</h3></div>`;
 
   const { ok, data } = await apiFetch('/surveyor/profile');
-  if (!ok) { container.innerHTML = 'Failed to load profile.'; return; }
+  if (!ok) { container.innerHTML = '<div class="alert alert-error"><span>⚠</span><span>Failed to load profile.</span></div>'; return; }
 
   const { surveyor, reviews } = data;
-  const stars = '★'.repeat(Math.round(surveyor.stats.average_rating)) + '☆'.repeat(5 - Math.round(surveyor.stats.average_rating));
+  const profile = surveyor.profile || {};
+  const avgRating = surveyor.stats.average_rating || 0;
+  const filledStars = '★'.repeat(Math.round(avgRating)) + '☆'.repeat(5 - Math.round(avgRating));
+  const initials = currentUser.name.split(' ').map(w => w[0]).join('').substring(0, 2).toUpperCase();
+  const photoSrc = profile.photo || null;
+
+  // Restore machines list from saved profile
+  machinesList = profile.machines || [];
+  profilePhotoBase64 = photoSrc || null;
 
   container.innerHTML = `
     <div class="section-header"><h2 class="section-title">My Profile</h2></div>
+
     <div class="stats-grid">
-      <div class="stat-card"><div class="stat-number">${surveyor.stats.unlocked_contacts}</div><div class="stat-label">Contacts Unlocked</div></div>
-      <div class="stat-card"><div class="stat-number">${surveyor.stats.reviews_count}</div><div class="stat-label">Reviews</div></div>
-      <div class="stat-card"><div class="stat-number">${surveyor.stats.average_rating || '—'}</div><div class="stat-label">Avg Rating</div></div>
+      <div class="stat-card">
+        <div class="stat-number">${surveyor.stats.unlocked_contacts}</div>
+        <div class="stat-label">Unlocked</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">${surveyor.stats.reviews_count}</div>
+        <div class="stat-label">Reviews</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number">${avgRating || '—'}</div>
+        <div class="stat-label">Avg Rating</div>
+      </div>
     </div>
 
-    <div class="card" style="max-width:640px">
-      <h3 class="card-title" style="margin-bottom:16px">Profile Details</h3>
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="profile-photo-wrap">
+          <div class="profile-photo-circle" id="profile-photo-circle" onclick="document.getElementById('photo-file-input').click()">
+            ${photoSrc ? `<img src="${photoSrc}" id="profile-photo-img" alt="profile">` : `<span id="profile-photo-initials">${initials}</span>`}
+          </div>
+          <div class="photo-edit-btn" onclick="document.getElementById('photo-file-input').click()">✏</div>
+          <input type="file" id="photo-file-input" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)">
+        </div>
+        <div>
+          <div class="profile-info-name">${currentUser.name}</div>
+          <div class="profile-info-role">📐 Surveyor ${avgRating ? `· ${filledStars}` : ''}</div>
+          <div style="font-size:12px;color:var(--text-dim);margin-top:4px">Click photo to change</div>
+        </div>
+      </div>
+
       <div id="profile-alert"></div>
-      <div class="form-group">
-        <label>Company / Firm</label>
-        <input type="text" id="prof-company" value="${surveyor.profile?.company || ''}">
+
+      <!-- BASIC INFO -->
+      <div class="section-card">
+        <div class="section-card-title">👤 Basic Information</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Owner / Proprietor Name</label>
+            <input type="text" id="prof-owner-name" value="${profile.owner_name || ''}" placeholder="Name of owner or proprietor">
+          </div>
+          <div class="form-group">
+            <label>Firm / Company Name</label>
+            <input type="text" id="prof-company" value="${profile.company || ''}" placeholder="Survey Associates Ltd.">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Years of Experience</label>
+            <input type="text" id="prof-experience" value="${profile.experience || ''}" placeholder="e.g. 8 years">
+          </div>
+          <div class="form-group">
+            <label>Specialization / Services</label>
+            <input type="text" id="prof-specialization" value="${profile.specialization || ''}" placeholder="e.g. Land, GPS, Topographic">
+          </div>
+        </div>
       </div>
-      <div class="form-group">
-        <label>Years of Experience</label>
-        <input type="text" id="prof-experience" value="${surveyor.profile?.experience || ''}">
+
+      <!-- LEGAL INFO -->
+      <div class="section-card">
+        <div class="section-card-title">📋 Legal & Registration</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>License Number (if any)</label>
+            <input type="text" id="prof-license" value="${profile.license_no || ''}" placeholder="e.g. SRV/MH/2019/12345">
+          </div>
+          <div class="form-group">
+            <label>GST Number (if registered)</label>
+            <input type="text" id="prof-gst" value="${profile.gst_no || ''}" placeholder="e.g. 27AABCU9603R1ZX">
+          </div>
+        </div>
       </div>
-      <button class="btn btn-primary" style="width:auto" onclick="saveProfile()">💾 Save Profile</button>
+
+      <!-- MACHINES & EQUIPMENT -->
+      <div class="section-card">
+        <div class="section-card-title">🔧 Machines & Equipment</div>
+        <div class="form-group" style="margin-bottom:6px">
+          <label>Add equipment / instruments</label>
+          <div class="tag-input-wrap" id="machines-tag-wrap" onclick="document.getElementById('machines-input').focus()">
+            <div id="machines-tags-container" style="display:contents"></div>
+            <input type="text" class="tag-input-field" id="machines-input"
+              placeholder="Type and press Enter…"
+              onkeydown="handleMachineKeydown(event)"
+              oninput="this.size = Math.max(10, this.value.length + 2)">
+          </div>
+          <div class="tag-input-hint">💡 Examples: Total Station, DGPS, Theodolite, Auto Level, Drone, EDM, Leica TS06</div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" style="width:auto;padding:12px 28px;margin-top:4px" onclick="saveProfile()" id="save-profile-btn">
+        Save Profile
+      </button>
     </div>
 
     ${reviews.length > 0 ? `
-      <div class="section-header" style="margin-top:24px"><h2 class="section-title">Customer Reviews</h2></div>
+      <div class="section-header" style="margin-top:28px">
+        <h2 class="section-title">Customer Reviews</h2>
+      </div>
       ${reviews.map(r => `
         <div class="review-card">
-          <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)} (${r.rating}/5)</div>
+          <div class="review-stars">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</div>
           <div class="review-text">${r.review_text}</div>
-          <div class="review-meta">— ${r.customer_name} &bull; ${r.survey_type} &bull; ${r.created_at ? new Date(r.created_at).toLocaleDateString() : ''}</div>
+          <div class="review-meta">
+            <span>${r.customer_name}</span>
+            <span class="review-meta-dot"></span>
+            <span>${r.survey_type}</span>
+            <span class="review-meta-dot"></span>
+            <span>${r.created_at ? new Date(r.created_at).toLocaleDateString('en-IN') : ''}</span>
+          </div>
         </div>
       `).join('')}
-    ` : `<div class="alert alert-info" style="margin-top:16px">No reviews yet. Complete survey jobs to receive ratings.</div>`}
+    ` : `<div class="alert alert-info" style="margin-top:16px"><span>ℹ</span><span>No reviews yet — complete survey jobs to receive ratings.</span></div>`}
   `;
+
+  // Render existing machines
+  renderMachineTags();
 }
 
+/* ===== MACHINE TAG INPUT ===== */
+function renderMachineTags() {
+  const container = document.getElementById('machines-tags-container');
+  if (!container) return;
+  container.innerHTML = machinesList.map((m, i) => `
+    <span class="machine-tag">
+      ${m}
+      <span class="machine-tag-x" onclick="removeMachine(${i})">×</span>
+    </span>
+  `).join('');
+}
+
+function handleMachineKeydown(e) {
+  if (e.key === 'Enter' || e.key === ',') {
+    e.preventDefault();
+    const val = e.target.value.trim().replace(/,$/, '');
+    if (val && !machinesList.includes(val)) {
+      machinesList.push(val);
+      renderMachineTags();
+    }
+    e.target.value = '';
+  } else if (e.key === 'Backspace' && e.target.value === '' && machinesList.length > 0) {
+    machinesList.pop();
+    renderMachineTags();
+  }
+}
+
+function removeMachine(index) {
+  machinesList.splice(index, 1);
+  renderMachineTags();
+}
+
+/* ===== PHOTO UPLOAD ===== */
+function handlePhotoUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  if (file.size > 2 * 1024 * 1024) {
+    alert('Photo must be under 2MB');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    profilePhotoBase64 = e.target.result;
+    // Update UI immediately
+    const circle = document.getElementById('profile-photo-circle');
+    if (circle) {
+      circle.innerHTML = `<img src="${profilePhotoBase64}" alt="profile">`;
+    }
+    // Update nav avatar too
+    updateNavAvatar();
+  };
+  reader.readAsDataURL(file);
+}
+
+/* ===== SAVE PROFILE ===== */
 async function saveProfile() {
+  // Check for pending machine input
+  const machineInput = document.getElementById('machines-input');
+  if (machineInput && machineInput.value.trim()) {
+    const val = machineInput.value.trim();
+    if (!machinesList.includes(val)) machinesList.push(val);
+    machineInput.value = '';
+    renderMachineTags();
+  }
+
   const payload = {
-    company: document.getElementById('prof-company').value.trim(),
-    experience: document.getElementById('prof-experience').value.trim()
+    owner_name: document.getElementById('prof-owner-name')?.value.trim() || '',
+    company: document.getElementById('prof-company')?.value.trim() || '',
+    experience: document.getElementById('prof-experience')?.value.trim() || '',
+    specialization: document.getElementById('prof-specialization')?.value.trim() || '',
+    license_no: document.getElementById('prof-license')?.value.trim() || '',
+    gst_no: document.getElementById('prof-gst')?.value.trim() || '',
+    machines: machinesList,
+    photo: profilePhotoBase64 || null
   };
 
+  const btn = document.getElementById('save-profile-btn');
+  btn.innerHTML = '<span class="spinner"></span> Saving…'; btn.disabled = true;
+
   const { ok, data } = await apiFetch('/surveyor/profile', { method: 'PUT', body: JSON.stringify(payload) });
-  if (ok) showAlert('profile-alert', '✅ Profile updated successfully!', 'success');
-  else showAlert('profile-alert', data.error || 'Failed to update');
+
+  btn.innerHTML = 'Save Profile'; btn.disabled = false;
+
+  if (ok) {
+    showAlert('profile-alert', 'Profile updated successfully!', 'success');
+    // Update stored user profile with photo for nav
+    if (currentUser) {
+      currentUser.profile = currentUser.profile || {};
+      currentUser.profile.photo = profilePhotoBase64 || currentUser.profile.photo;
+      localStorage.setItem('user', JSON.stringify(currentUser));
+      updateNavAvatar();
+    }
+  } else {
+    showAlert('profile-alert', data.error || 'Failed to update profile');
+  }
 }
 
-// ===== BOOT =====
+/* ===== BOOT ===== */
 window.onload = async function() {
   const token = getToken();
   if (token) {
     const stored = localStorage.getItem('user');
     if (stored) {
       currentUser = JSON.parse(stored);
-      // Verify token is still valid
       const { ok, data } = await apiFetch('/me');
       if (ok) {
         currentUser = data;

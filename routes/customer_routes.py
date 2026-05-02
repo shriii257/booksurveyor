@@ -1,134 +1,151 @@
 """
-Customer Routes - Mark contacted status
+Customer Routes
 """
 from flask import Blueprint, request, jsonify
-from database import get_db
-from auth_middleware import role_required
 from bson import ObjectId
 from datetime import datetime
+from database import get_db
+from auth_middleware import token_required, role_required
 
 customer_bp = Blueprint('customer', __name__)
 
-@customer_bp.route('/mark-contacted', methods=['POST'])
-@role_required('customer')
-def mark_contacted():
-    """Customer marks a surveyor as 'contacted'."""
-    data = request.get_json()
-    
-    if not data.get('unlock_id'):
-        return jsonify({'error': 'unlock_id is required'}), 400
-    
-    db = get_db()
-    
-    try:
-        unlock = db.contact_unlocks.find_one({'_id': ObjectId(data['unlock_id'])})
-    except Exception:
-        return jsonify({'error': 'Invalid unlock ID'}), 400
-    
-    if not unlock:
-        return jsonify({'error': 'Unlock record not found'}), 404
-    
-    # Verify this customer owns the listing
-    listing = db.listings.find_one({'_id': unlock['listing_id']})
-    if not listing or str(listing['customer_id']) != request.current_user_id:
-        return jsonify({'error': 'Unauthorized'}), 403
-    
-    # Update status to contacted
-    db.contact_unlocks.update_one(
-        {'_id': unlock['_id']},
-        {'$set': {'status': 'contacted', 'contacted_at': datetime.utcnow()}}
-    )
-    
-    return jsonify({'message': 'Marked as contacted', 'status': 'contacted'}), 200
+
+def serialize(doc):
+    if doc is None:
+        return None
+    if isinstance(doc, list):
+        return [serialize(d) for d in doc]
+    if isinstance(doc, dict):
+        return {k: serialize(v) for k, v in doc.items()}
+    if isinstance(doc, ObjectId):
+        return str(doc)
+    if isinstance(doc, datetime):
+        return doc.isoformat()
+    return doc
 
 
-@customer_bp.route('/mark-not-contacted', methods=['POST'])
-@role_required('customer')
-def mark_not_contacted():
-    """Customer marks a surveyor as 'not contacted'."""
-    data = request.get_json()
-    
-    if not data.get('unlock_id'):
-        return jsonify({'error': 'unlock_id is required'}), 400
-    
-    db = get_db()
-    
-    try:
-        unlock = db.contact_unlocks.find_one({'_id': ObjectId(data['unlock_id'])})
-    except Exception:
-        return jsonify({'error': 'Invalid unlock ID'}), 400
-    
-    if not unlock:
-        return jsonify({'error': 'Unlock record not found'}), 404
-    
-    # Verify this customer owns the listing
-    listing = db.listings.find_one({'_id': unlock['listing_id']})
-    if not listing or str(listing['customer_id']) != request.current_user_id:
-        return jsonify({'error': 'Unauthorized'}), 403
-    
-    # Update status
-    db.contact_unlocks.update_one(
-        {'_id': unlock['_id']},
-        {'$set': {'status': 'not_contacted', 'updated_at': datetime.utcnow()}}
-    )
-    
-    return jsonify({'message': 'Marked as not contacted', 'status': 'not_contacted'}), 200
-
-
+# ─────────────────────────────────────────────
+# GET /api/customer/dashboard
+# ─────────────────────────────────────────────
 @customer_bp.route('/customer/dashboard', methods=['GET'])
 @role_required('customer')
 def customer_dashboard():
-    """Get customer dashboard data."""
     db = get_db()
     customer_id = ObjectId(request.current_user_id)
-    
-    # Get all listings by this customer
+
+    # All listings by this customer
     listings = list(db.listings.find({'customer_id': customer_id}).sort('created_at', -1))
-    
-    total_unlocks = 0
-    contacted_count = 0
-    
+
     result = []
     for listing in listings:
-        unlocks = list(db.contact_unlocks.find({'listing_id': listing['_id']}))
-        total_unlocks += len(unlocks)
-        contacted = sum(1 for u in unlocks if u.get('status') == 'contacted')
-        contacted_count += contacted
-        
-        unlock_data = []
-        for unlock in unlocks:
-            surveyor = db.users.find_one({'_id': unlock['surveyor_id']})
+        listing_id = listing['_id']
+
+        # Find all surveyors who unlocked this listing
+        unlocks = list(db.contact_unlocks.find({'listing_id': listing_id}))
+
+        unlock_details = []
+        for u in unlocks:
+            surveyor = db.users.find_one({'_id': u['surveyor_id']})
             has_review = db.reviews.find_one({
-                'listing_id': listing['_id'],
-                'surveyor_id': unlock['surveyor_id']
+                'listing_id': listing_id,
+                'surveyor_id': u['surveyor_id']
             }) is not None
-            unlock_data.append({
-                'unlock_id': str(unlock['_id']),
-                'surveyor_id': str(unlock['surveyor_id']),
-                'surveyor_name': surveyor['name'] if surveyor else 'Unknown',
-                'status': unlock.get('status', 'pending'),
-                'has_review': has_review
+
+            unlock_details.append({
+                'unlock_id': str(u['_id']),
+                'surveyor_id': str(u['surveyor_id']),   # ← needed for "View Profile"
+                'surveyor_name': surveyor.get('name') if surveyor else 'Unknown',
+                'status': u.get('status', 'pending'),
+                'has_review': has_review,
+                'unlocked_at': u.get('unlocked_at')
             })
-        
+
         result.append({
-            'id': str(listing['_id']),
-            'survey_type': listing['survey_type'],
-            'area': listing['area'],
-            'address': listing['address'],
-            'date': listing['date'],
-            'time': listing['time'],
+            'id': str(listing_id),
+            'survey_type': listing.get('survey_type'),
+            'area': listing.get('area'),
+            'address': listing.get('address'),
+            'date': listing.get('date'),
+            'time': listing.get('time'),
+            'phone': listing.get('phone'),
             'description': listing.get('description', ''),
-            'phone': listing.get('phone', ''),
             'status': listing.get('status', 'open'),
-            'created_at': listing.get('created_at', '').isoformat() if listing.get('created_at') else '',
-            'unlocks': unlock_data
+            'unlocks': unlock_details
         })
-    
-    return jsonify({
+
+    # Summary stats
+    all_unlocks = list(db.contact_unlocks.find({'customer_id': customer_id}))
+    contacted_count = sum(1 for u in all_unlocks if u.get('status') == 'contacted')
+
+    return jsonify(serialize({
         'listings': result,
         'stats': {
             'total_listings': len(listings),
-            'total_unlocks': total_unlocks,
+            'total_unlocks': len(all_unlocks),
             'contacted': contacted_count
         }
-    }), 200
+    })), 200
+
+
+# ─────────────────────────────────────────────
+# POST /api/mark-contacted
+# ─────────────────────────────────────────────
+@customer_bp.route('/mark-contacted', methods=['POST'])
+@role_required('customer')
+def mark_contacted():
+    db = get_db()
+    data = request.get_json() or {}
+    unlock_id_str = data.get('unlock_id', '').strip()
+
+    if not unlock_id_str:
+        return jsonify({'error': 'unlock_id is required'}), 400
+
+    try:
+        unlock_id = ObjectId(unlock_id_str)
+    except Exception:
+        return jsonify({'error': 'Invalid unlock_id'}), 400
+
+    customer_id = ObjectId(request.current_user_id)
+
+    unlock = db.contact_unlocks.find_one({'_id': unlock_id, 'customer_id': customer_id})
+    if not unlock:
+        return jsonify({'error': 'Unlock record not found or access denied'}), 404
+
+    db.contact_unlocks.update_one(
+        {'_id': unlock_id},
+        {'$set': {'status': 'contacted', 'contacted_at': datetime.utcnow()}}
+    )
+
+    return jsonify({'message': 'Marked as contacted'}), 200
+
+
+# ─────────────────────────────────────────────
+# POST /api/mark-not-contacted
+# ─────────────────────────────────────────────
+@customer_bp.route('/mark-not-contacted', methods=['POST'])
+@role_required('customer')
+def mark_not_contacted():
+    db = get_db()
+    data = request.get_json() or {}
+    unlock_id_str = data.get('unlock_id', '').strip()
+
+    if not unlock_id_str:
+        return jsonify({'error': 'unlock_id is required'}), 400
+
+    try:
+        unlock_id = ObjectId(unlock_id_str)
+    except Exception:
+        return jsonify({'error': 'Invalid unlock_id'}), 400
+
+    customer_id = ObjectId(request.current_user_id)
+
+    unlock = db.contact_unlocks.find_one({'_id': unlock_id, 'customer_id': customer_id})
+    if not unlock:
+        return jsonify({'error': 'Unlock record not found or access denied'}), 404
+
+    db.contact_unlocks.update_one(
+        {'_id': unlock_id},
+        {'$set': {'status': 'not_contacted'}}
+    )
+
+    return jsonify({'message': 'Marked as not contacted'}), 200
