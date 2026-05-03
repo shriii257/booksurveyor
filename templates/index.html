@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SurveyorLink — Marketplace</title>
+<title>BookSurveyor — Marketplace</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -796,7 +796,7 @@
       <div class="auth-left-content">
         <div class="auth-brand">
           <div class="auth-brand-icon">🗺</div>
-          <div class="auth-brand-name">SurveyorLink</div>
+          <div class="auth-brand-name">BookSurveyor</div>
         </div>
         <h1 class="auth-headline">India's Survey<br><em>Professional</em><br>Marketplace</h1>
         <p class="auth-subhead">Connect with certified surveyors across India. Post your requirements, get contacted by professionals, track every step.</p>
@@ -813,7 +813,7 @@
     <div class="auth-right">
       <div class="auth-mobile-brand">
         <div class="auth-mobile-brand-icon">🗺</div>
-        <div class="auth-mobile-brand-name">SurveyorLink</div>
+        <div class="auth-mobile-brand-name">BookSurveyor</div>
       </div>
 
       <h2 class="auth-right-title">Welcome back</h2>
@@ -885,7 +885,7 @@
   <nav class="navbar">
     <div class="nav-logo">
       <div class="nav-logo-icon">🗺</div>
-      <div class="nav-logo-text">SurveyorLink</div>
+      <div class="nav-logo-text">BookSurveyor</div>
     </div>
     <div class="nav-right">
       <div class="nav-user-info">
@@ -1014,7 +1014,7 @@ function switchAuthTab(tab) {
   document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
   document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
   document.getElementById('auth-alert').innerHTML = '';
-  const titles = { login: ['Welcome back', 'Sign in to your account'], register: ['Join SurveyorLink', 'Create your free account'] };
+  const titles = { login: ['Welcome back', 'Sign in to your account'], register: ['Join BookSurveyor', 'Create your free account'] };
   document.querySelector('.auth-right-title').textContent = titles[tab][0];
   document.querySelector('.auth-right-sub').textContent = titles[tab][1];
 }
