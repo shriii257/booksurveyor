@@ -39,8 +39,8 @@ users = [
     },
     {
         '_id': customer2_id,
-        'name': 'Priya Patel',
-        'email': 'priya@example.com',
+        'name': 'Gayatri B',
+        'email': 'gayatri@example.com',
         'phone': '9876543211',
         'role': 'customer',
         'password_hash': generate_password_hash('password123'),

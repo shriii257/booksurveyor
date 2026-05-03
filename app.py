@@ -1,7 +1,7 @@
 """
 Surveyor Marketplace Platform - Main Application Entry Point
 """
-from flask import Flask
+from flask import Flask, render_template
 from flask_cors import CORS
 from config import Config
 from database import init_db
@@ -30,18 +30,10 @@ def create_app():
     app.register_blueprint(customer_bp, url_prefix='/api')
     app.register_blueprint(review_bp, url_prefix='/api')
     
-    # Serve frontend pages
-    from flask import send_from_directory
-    
+    # Serve frontend
     @app.route('/')
     def index():
-        return send_from_directory('templates', 'index.html')
-    
-    @app.route('/<path:filename>')
-    def serve_template(filename):
-        if filename.endswith('.html'):
-            return send_from_directory('templates', filename)
-        return send_from_directory('static', filename)
+        return render_template('index.html')
     
     return app
 

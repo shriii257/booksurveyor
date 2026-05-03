@@ -79,7 +79,7 @@ Open your browser at: **http://localhost:5000**
 | Role | Email | Phone | Password |
 |------|-------|-------|----------|
 | Customer | rajesh@example.com | 9876543210 | password123 |
-| Customer | priya@example.com | 9876543211 | password123 |
+| Customer | gayatri@example.com | 9876543211 | password123 |
 | Surveyor | amit@surveyors.com | 9765432100 | password123 |
 | Surveyor | sunita@geodata.com | 9765432101 | password123 |
 
